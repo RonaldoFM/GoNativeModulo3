@@ -20,13 +20,10 @@ yarn add axios
 yarn add redux-saga
 yarn add reactotron-redux-saga
 
-or create a new repository on the command line
-echo "# GoNativeModulo3" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/RonaldoFM/GoNativeModulo3.git
-git push -u origin master
+
+cmd + enter (criar o commit)
+gitshortlog
+
 …or push an existing repository from the command line
 git remote add origin https://github.com/RonaldoFM/GoNativeModulo3.git
 git push -u origin master
