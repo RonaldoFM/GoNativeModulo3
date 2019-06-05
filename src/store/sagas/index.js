@@ -1,9 +1,16 @@
-import { all, takeLatest, call, put } from "redux-saga/effects";
+import { all, takeLatest, call, put, select } from "redux-saga/effects";
 import api from "~/services/api";
 import { navigate } from "~/services/navigation";
-import * as LoginActions from "~/store/actions/login";
+import {
+  Creators as LoginActions,
+  Types as LoginsTypes
+} from "~/store/ducks/login";
+import {
+  Creators as RepositoriesActions,
+  Types as RepositoriesTypes
+} from "~/store/ducks/repositories";
 
-function* login() {
+function* login(action) {
   try {
     const { username } = action.payload;
     yield call(api.get, `/users/${username}`);
@@ -16,6 +23,21 @@ function* login() {
   }
 }
 
+function* loadRepositories() {
+  try {
+    const { username } = yield select(state => state.login);
+
+    const response = yield call(api.get, `/users/${username}/repos`);
+
+    yield put(RepositoriesActions.loadRepositoriesSuccess(response.data));
+  } catch (err) {
+    yield put(RepositoriesActions.loadRepositoriesFailure());
+  }
+}
+
 export default function* rootSaga() {
-  return yield all([takeLatest("LOGIN_REQUEST", login)]);
+  return yield all([
+    takeLatest(LoginsTypes.REQUEST, login),
+    takeLatest(RepositoriesTypes.LOAD_REQUEST, loadRepositories)
+  ]);
 }
